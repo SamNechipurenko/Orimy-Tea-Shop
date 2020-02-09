@@ -1,7 +1,6 @@
 package servlets;
 
-import controller.ProductHandler;
-import controller.PurchaseHandler;
+import controller.UserHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -10,23 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class BuyProduct extends HttpServlet {
-    @Override
+public class Deposit extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-                                                    throws ServletException, IOException {
+                                                    throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try{
             String username = request.getParameter("username");
-            String productId = request.getParameter("productId");
-            String amount = request.getParameter("amount");
-            
-            new PurchaseHandler().addPurchase(username, productId, amount);
-            new ProductHandler().buyProduct(productId, amount, username);
-            
+            String deposit = request.getParameter("total");
+            new UserHandler(username).depositAccaunt(deposit);
             request.setAttribute("username", username);
-            getServletContext().getRequestDispatcher("/pages/enterySet/myoffice.jsp").
-                                                                 forward(request, response);
+            getServletContext().getRequestDispatcher("/pages/enterySet/myoffice.jsp").forward(request, response);
+        
         }catch(IOException ex){
             out.println(ex);
         } catch (ServletException ex) {
@@ -37,4 +32,5 @@ public class BuyProduct extends HttpServlet {
             out.println(ex);
         }
     }
+
 }

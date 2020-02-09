@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class UserHandler {
     private PreparedStatement pst;
-    private final Connection con;
+    private final Connection CON;
     private ResultSet rs;
     private final String username;
     private String query;
@@ -17,12 +17,13 @@ public class UserHandler {
     public UserHandler(String username) throws ClassNotFoundException, SQLException {
         this.username = username;
         Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/orimy", "root", "1111");
+        CON = DriverManager.getConnection("jdbc:mysql://localhost:3306/orimy?"
+                           + "useUnicode=true&characterEncoding=UTF-8", "root", "1111");
     }
     
     public String getUserWallet() throws SQLException{
         query = "SELECT wallet FROM orimy.users WHERE username = '"+username+"';";
-        pst = con.prepareStatement(query);
+        pst = CON.prepareStatement(query);
         rs = pst.executeQuery();
         rs.next();
         return rs.getString("wallet");
@@ -31,7 +32,7 @@ public class UserHandler {
         query = "INSERT INTO `users` (`username`,`password`,`email`,`wallet`) "+ "VALUES ('"
                            +user.getUsername()+"','"+user.getPassword()+"','"+user.getEmail()+
                                                                    "','"+user.getWallet()+"');";
-        pst = con.prepareStatement(query);
+        pst = CON.prepareStatement(query);
         pst.executeUpdate();
     }
     
@@ -39,10 +40,16 @@ public class UserHandler {
         
         query = "SELECT * FROM orimy.users WHERE username = '"+username+"'"
                                                                         + " AND password = '"+password+"';";
-        pst = con.prepareStatement(query);
+        pst = CON.prepareStatement(query);
         rs = pst.executeQuery();
         rs.next();
         return rs.getString("username").equals(username)&rs.getString("password").equals(password);
+    }
+    
+    public void depositAccaunt(String total) throws SQLException{
+        query = "UPDATE `orimy`.`users` SET wallet=wallet+"+total+" WHERE `username`='"+username+"';";
+        pst = CON.prepareStatement(query);
+        pst.executeUpdate();
     }
     
     public void deleteUser(String username){
