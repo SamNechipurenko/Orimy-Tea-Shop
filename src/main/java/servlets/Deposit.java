@@ -11,26 +11,29 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Deposit extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
                                                     throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try{
-            String username = request.getParameter("username");
+            //Cookie[] cookies = request.getCookies();
             String deposit = request.getParameter("total");
-            new UserHandler(username).depositAccaunt(deposit);
-            request.setAttribute("username", username);
-            getServletContext().getRequestDispatcher("/pages/enterySet/myoffice.jsp").forward(request, response);
-        
+            new UserHandler().depositAccaunt(deposit , request);
+            
+            response.sendRedirect("pages/enterySet/myoffice.jsp");
         }catch(IOException ex){
-            out.println(ex);
-        } catch (ServletException ex) {
             out.println(ex);
         } catch (ClassNotFoundException ex) {
             out.println(ex);
         } catch (SQLException ex) {
             out.println(ex);
         }
+    }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect("pages/enterySet/myoffice.jsp");
     }
 
 }

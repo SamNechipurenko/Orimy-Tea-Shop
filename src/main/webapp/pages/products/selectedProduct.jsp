@@ -1,3 +1,5 @@
+<%@page import="cookiesOps.CookiesMethods"%>
+<%@page import="controller.UserHandler"%>
 <%@page import="controller.ProductHandler"%>
 <%@page import="enteties.Product"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -41,8 +43,8 @@
                     <td>description</td>
                     <td></td>
                 </tr>
-                <% String id = request.getParameter("productId");
-                   Product prod = new ProductHandler().getProduct(id);%>
+                <%  String id = (new CookiesMethods()).getCookie("productId", request).getValue();
+                    Product prod = new ProductHandler().getProduct(id);%>
                 <tr>
                     <td><%= prod.getId() %></td>
                     <td><%= prod.getTitle() %></td>
@@ -52,10 +54,8 @@
                     <td><%= prod.getAmount() %></td>
                     <td><%= prod.getDescription() %></td>
                     <td>
-                        <form action="buyProduct" method="GET">
-                            <input type="hidden" name="username" value=<%=request.getParameter("username")%>>
+                        <form action="/OrimyTeaShop/buyProduct" method="POST">
                             <input type="text" class="form-control" name="amount" placeholder="grams of tea">
-                            <input type="hidden" name="productId" value=<%=prod.getId()%>>
                             <input class="btn-success" type="submit" value="buy">
                         </form>
                     </td>

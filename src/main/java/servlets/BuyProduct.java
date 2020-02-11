@@ -2,6 +2,7 @@ package servlets;
 
 import controller.ProductHandler;
 import controller.PurchaseHandler;
+import cookiesOps.CookiesMethods;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -12,24 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 
 public class BuyProduct extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
                                                     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try{
-            String username = request.getParameter("username");
-            String productId = request.getParameter("productId");
             String amount = request.getParameter("amount");
-            
+            String username =  new CookiesMethods().getCookie("username", request).getValue();
+            String productId =  new CookiesMethods().getCookie("productId", request).getValue();
             new PurchaseHandler().addPurchase(username, productId, amount);
             new ProductHandler().buyProduct(productId, amount, username);
             
-            request.setAttribute("username", username);
-            getServletContext().getRequestDispatcher("/pages/enterySet/myoffice.jsp").
-                                                                 forward(request, response);
+            response.sendRedirect("pages/enterySet/myoffice.jsp");
+            
         }catch(IOException ex){
-            out.println(ex);
-        } catch (ServletException ex) {
             out.println(ex);
         } catch (ClassNotFoundException ex) {
             out.println(ex);

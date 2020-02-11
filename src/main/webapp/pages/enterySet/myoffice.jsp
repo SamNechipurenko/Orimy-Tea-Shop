@@ -32,17 +32,17 @@
     <body>
         <center><h1><u>my accaunt</u></h1></center> 
         
-          <form action="deposit" method="GET">
+          <form action="/OrimyTeaShop/deposit" method="Post">
             <table>
                 <tr>
-                    <th>user: <%= request.getParameter("username")%></th>
-                    <th><p>wallet: <%= (new UserHandler(request.getParameter("username"))).getUserWallet()%></p></th>
+                    <th>user: <%= (new UserHandler()).getUserName(request, "username") %></th>
+                    <th><p>wallet: <%= (new UserHandler()).getUserWallet(request)%></p></th>
                     <th></th>
                 </tr>
                 <tr>
+                    <% %>
                     <th>replenish account: </td>
                     <th>
-                        <input type="hidden" name="username" value=${username}>
                         <input type="text" class="form-control" name="total" placeholder="replenish account">
                     </th>
                     <th><input class="btn-success" type="submit" value="deposit to account"></th>
@@ -51,8 +51,7 @@
           </form>
         
         <center>            
-          <form action="products" method="GET">
-            <input type="hidden" name="username" value=${username}>
+          <form action="/OrimyTeaShop/pages/products/products.jsp" method="GET">
             <input class="btn-success" type="submit" value="products">
           </form>
         </center>
@@ -69,7 +68,7 @@
                     <td>date</td>
                     <td></td>
                 </tr>
-                <%  String un = request.getParameter("username");
+                <%  String un = (new UserHandler()).getUserName(request, "username");
                     for(UserPurchase prod : new PurchaseHandler().listOfPurchases(un)){%>
                 <tr>
                     <td><%= prod.getUsername() %></td>
@@ -79,8 +78,7 @@
                     <td><%= prod.getmTotalPrice() %></td>
                     <td><%= prod.getDate() %></td>
                     <td>
-                        <form action="chooseProduct" method="GET">
-                            <input type="hidden" name="username" value=${username}>
+                        <form action="/OrimyTeaShop/chooseProduct" method="GET">
                             <input type="hidden" name="productId" value=<%=prod.getmProductId()%>>
                             <input class="btn-success" type="submit" value="choose">
                         </form>

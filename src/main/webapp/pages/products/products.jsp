@@ -53,8 +53,7 @@
                     <td><%= prod.getAmount() %></td>
                     <td><%= prod.getDescription() %></td>
                     <td>
-                        <form action="chooseProduct" method="GET">
-                            <input type="hidden" name="username" value=${username}>
+                        <form action="/OrimyTeaShop/chooseProduct" method="GET">
                             <input type="hidden" name="productId" value=<%=prod.getId()%>>
                             <input class="btn-success" type="submit" value="choose">
                         </form>

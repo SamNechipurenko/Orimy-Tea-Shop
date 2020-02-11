@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Login extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
                                                        throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -22,10 +23,15 @@ public class Login extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             try{
-                if(true==(new UserHandler(username)).userCheck(username, password)){
-                    request.setAttribute("username", username);
-                    getServletContext().getRequestDispatcher("/pages/enterySet/myoffice.jsp").forward(request, response);
+            
+                if((new UserHandler()).userCheck(username, password)){
+                    //request.setAttribute("username", username);
+                    //request.setAttribute("password", password);
+                    Cookie user = new Cookie("username",username);
+                    response.addCookie(user);
+                    response.sendRedirect("pages/enterySet/myoffice.jsp");
                 }
+                
             }catch (SQLException ex){
                 out.println(username + password);
                     out.println("Incorrect username or password");
@@ -34,15 +40,15 @@ public class Login extends HttpServlet {
             }
         }catch(IOException ex){
             out.println(ex);
-        } catch (ServletException ex) {
-            out.println(ex);
         }
     }
-
+    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
-    }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                                                       throws ServletException, IOException{
+        response.setContentType("text/html;charset=UTF-8");
+        response.sendRedirect("pages/enterySet/myoffice.jsp");
+    }    
+
     
 }

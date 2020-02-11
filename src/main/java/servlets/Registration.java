@@ -21,7 +21,7 @@ public class Registration extends HttpServlet {
             String username = request.getParameter("username"),
                    password = request.getParameter("password"), email = request.getParameter("email");
             if(!"".equals(username) && !"".equals(password) && !"".equals(email)){
-                UserHandler userHandler = new UserHandler(username);
+                UserHandler userHandler = new UserHandler();
                 userHandler.addToDB(new User(username, password, email, "0"));
                 response.sendRedirect("pages/enterySet/login.jsp");
             }else out.println("one of mandatory fields is not filled");

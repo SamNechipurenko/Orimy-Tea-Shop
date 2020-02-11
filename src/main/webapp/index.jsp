@@ -25,7 +25,10 @@
                     <table>
                         <tr>
                             <td>user name: </td>
-                            <td><input type="text" class="form-control" name="username" placeholder="user name"></td>
+                            <td>
+                                <input type="text" class="form-control"
+                                name="username" placeholder="user name">
+                            </td>
                         </tr>
                         <tr>
                             <td>password: </td>
