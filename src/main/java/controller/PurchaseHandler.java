@@ -1,5 +1,6 @@
 package controller;
 
+import controller.interfaces.PurchaseControl;
 import enteties.UserPurchase;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurchaseHandler {
+public class PurchaseHandler implements PurchaseControl{
     private final Connection CON;
     private PreparedStatement ps;
     private ResultSet rs;
@@ -19,6 +20,7 @@ public class PurchaseHandler {
                                + "useUnicode=true&characterEncoding=UTF-8", "root", "1111");
     }
     
+    @Override
     public void addPurchase(String username, String teaId, String amount) 
                                                 throws ClassNotFoundException, SQLException{
         //java.time.LocalDate.now()
@@ -29,6 +31,7 @@ public class PurchaseHandler {
         ps.executeUpdate();
     }
     
+    @Override
     public List<UserPurchase> listOfPurchases(String username) throws SQLException{
         List<UserPurchase> listOfPurchases = new ArrayList<UserPurchase>();
         String query = "SELECT * FROM purchases LEFT JOIN products ON "
@@ -49,6 +52,7 @@ public class PurchaseHandler {
         return listOfPurchases;
     }
     
+    @Override
     public void deletePurchase(String username, String teaId){
     }
     

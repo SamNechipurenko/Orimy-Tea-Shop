@@ -1,5 +1,6 @@
 package controller;
 
+import controller.interfaces.ProductControl;
 import enteties.Product;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductHandler {
+public class ProductHandler implements ProductControl{
     private final Connection CON;
     private PreparedStatement pst;
     
@@ -19,6 +20,7 @@ public class ProductHandler {
                                 + "?useUnicode=true&characterEncoding=UTF-8", "root", "1111");
     }
     
+    @Override
     public List<Product> productList() throws SQLException{
         List<Product> products = new ArrayList<Product>();
         String query = "SELECT * FROM orimy.products;";
@@ -33,6 +35,7 @@ public class ProductHandler {
         return products;
     }
     
+    @Override
     public Product getProduct(String id) throws SQLException{
         String query = "SELECT * FROM orimy.products WHERE id = '"+id+"';";
         pst = CON.prepareStatement(query);
@@ -43,6 +46,7 @@ public class ProductHandler {
                                                                 rs.getString("description"));
     }
     
+    @Override
     public List<Product> getUserPurcheses(String username) throws SQLException{
         String query = "SELECT * FROM orimy.purcheses WHERE username = '"+username+"';";
         pst = CON.prepareStatement(query);
@@ -51,6 +55,7 @@ public class ProductHandler {
         return null;
     }
     
+    @Override
     public void buyProduct(String id, String amount, String username) throws SQLException{
         //UPDATE tovar SET price=price*2;
         String priceQuery = "SELECT * FROM orimy.products WHERE id = '"+id+"';";

@@ -1,5 +1,6 @@
 package controller;
 
+import controller.interfaces.UserControl;
 import enteties.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-public class UserHandler {
+public class UserHandler implements UserControl{
     private PreparedStatement pst;
     private final Connection CON;
     private ResultSet rs;
@@ -23,6 +24,7 @@ public class UserHandler {
                            + "useUnicode=true&characterEncoding=UTF-8", "root", "1111");
     }
     
+    @Override
     public String getUserWallet(HttpServletRequest request) throws SQLException{
         query = "SELECT wallet FROM orimy.users WHERE username = '"+getUserName(request, "username")+"';";
         pst = CON.prepareStatement(query);
@@ -30,6 +32,7 @@ public class UserHandler {
         rs.next();
         return rs.getString("wallet");
     }
+    @Override
     public void addToDB(User user) throws ClassNotFoundException, SQLException{
         query = "INSERT INTO `users` (`username`,`password`,`email`,`wallet`) "+ "VALUES ('"
                            +user.getUsername()+"','"+user.getPassword()+"','"+user.getEmail()+
@@ -38,6 +41,7 @@ public class UserHandler {
         pst.executeUpdate();
     }
     
+    @Override
     public boolean userCheck(String username, String password) throws ClassNotFoundException, SQLException{
         
         query = "SELECT * FROM orimy.users WHERE username = '"+username+"'"
@@ -48,12 +52,14 @@ public class UserHandler {
         return rs.getString("username").equals(username)&rs.getString("password").equals(password);
     }
     
+    @Override
     public  void depositAccaunt(String total, HttpServletRequest request) throws SQLException{
         query = "UPDATE `orimy`.`users` SET wallet=wallet+"+total+" WHERE "
                 + "`username`='"+getUserName(request, "username")+"';";
         pst = CON.prepareStatement(query);
         pst.executeUpdate();
     }
+    @Override
     public String getUserName(HttpServletRequest request, String name){
         String user = "";
         Cookie[] cookies = request.getCookies();
@@ -63,10 +69,8 @@ public class UserHandler {
         }
         return user; 
     }
-    public String getUserCookie(){
-        return null;
-    }
     
+    @Override
     public void deleteUser(String username){
     }
 }
